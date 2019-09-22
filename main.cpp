@@ -25,10 +25,29 @@ void criaHD(char str[100] ,int i){
 	cout << "# " << HD << "> ";
 	
 	strcat(HD, ".txt");
-	FILE *file = fopen(HD, "wt");
-		fclose(file);
-
+	ofstream file;
+	file.open(HD);
 	
+	
+	for(int l = 1; l < 1025; l++){
+		for(int c = 1; c < 33; c++){
+			if(c == 1)
+			file << "0";
+
+			if(c == 32)
+			    file << "\n";
+
+			if(c == 2 && l < 21)
+				file << "0";
+				
+			else if(c == 2 && l > 20)
+			   	 file << "1";
+			
+			
+		}
+	}
+		
+		file.close();
 	
 }
 
