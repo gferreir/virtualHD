@@ -4,14 +4,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
+#include <fstream>
+#include <windows.h>
+#include <string>
 
 
 using namespace std;
 
-ofstream file;
+fstream file;
 char HD[100];
 
-void criaHD(char str[100] ,int i, ofstream& file){
+void criaHD(char str[100] ,int i){
 	int j=0;
 	while(str[i] !='\0'){
 		HD[j]=str[i];
@@ -27,10 +31,10 @@ void criaHD(char str[100] ,int i, ofstream& file){
 	cout << "# " << HD << "> ";
 	
 	strcat(HD, ".txt");
-	file.open(HD);
+	file.open(HD, std::fstream::in | std::fstream::out | std::fstream::app);
 	
 	
-	for(int l = 1; l < 1025; l++){
+	for(int l = 1; l < 40; l++){
 		for(int c = 1; c < 33; c++){
 			if(c == 1)
 			file << "0";
@@ -51,8 +55,28 @@ void criaHD(char str[100] ,int i, ofstream& file){
 	
 }
 
-void criaArquivo(char str[100], int i){
-	cout<< "teste";
+void criaArquivo(char str[100]){
+	cout<<"CHAMA";
+	int i=0;
+	int j=0;
+	char matriz[40][33];
+
+	while (!file.eof()){
+          for (i = 0; i < 40; i++)
+          {
+              for (j = 0; j < 33; j++)
+              {
+          file >> matriz[i][j];
+            cout << matriz[i][j] << "";
+            }
+            
+            
+          }
+            }
+            
+            file.close();            
+
+	
 	
 }
 
@@ -82,7 +106,7 @@ int main(int argc, char *argv[])
 	
 	if(i==8){
 		i++;
-		criaHD(str, i, file);
+		criaHD(str, i);
 
 	}else{
 		cout<< "Não foi possivel criar o HD";
@@ -97,7 +121,7 @@ int main(int argc, char *argv[])
 	
 	if(j==6 && file.is_open()){
 		j++;
-		criaArquivo(arquivo, j);
+		criaArquivo(arquivo);
 	}
 	
 	
