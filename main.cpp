@@ -8,9 +8,11 @@
 
 using namespace std;
 
-void criaHD(char str[100] ,int i){
+ofstream file;
+char HD[100];
+
+void criaHD(char str[100] ,int i, ofstream& file){
 	int j=0;
-	char HD[100];
 	while(str[i] !='\0'){
 		HD[j]=str[i];
 		
@@ -25,7 +27,6 @@ void criaHD(char str[100] ,int i){
 	cout << "# " << HD << "> ";
 	
 	strcat(HD, ".txt");
-	ofstream file;
 	file.open(HD);
 	
 	
@@ -47,7 +48,11 @@ void criaHD(char str[100] ,int i){
 		}
 	}
 		
-		file.close();
+	
+}
+
+void criaArquivo(char str[100], int i){
+	cout<< "teste";
 	
 }
 
@@ -68,26 +73,35 @@ int main(int argc, char *argv[])
 	gets(str);
 	
 	int i =0, j = 0;
-
+	
+	
 	while(str[i] == createHd[i] && str[i] !='\0'){
-		if(str[i] != createHd[i]){
-			printf("Errado");
-			return 0;
-			
-		}
 		i++;
 	}
-	
 	
 	
 	if(i==8){
 		i++;
-		criaHD(str, i);
-	
+		criaHD(str, i, file);
+
 	}else{
 		cout<< "Não foi possivel criar o HD";
 	}
 	
+	
+	gets(arquivo);
+	
+	while(arquivo[j] == create[j] && arquivo[j] !='\0'){
+		j++;
+	}
+	
+	if(j==6 && file.is_open()){
+		j++;
+		criaArquivo(arquivo, j);
+	}
+	
+	
+		file.close();
 
 	
 
