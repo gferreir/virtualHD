@@ -18,6 +18,11 @@ char HD[100];  // nome do HD
 int posicao=0; // posição disponivel para escreve conteudo do arquivo
 char matriz[40][33]; // HD
 char conteudo[100];// conteudo arquivo
+char str[100];
+char createHd[9] = "createhd";
+char arquivo[100];
+char nome[100];
+char create[7] = "create";
 
 
 void verificaDisponibilidade(){
@@ -101,18 +106,9 @@ void criaArquivo(char str[100]){
 }
 
 
-
-
 int main(int argc, char *argv[])
 {
-	char str[100];
-	char HD[100];
-	char createHd[9] = "createhd";
-
-
-	char arquivo[100];
-	char nome[100];
-	char create[7] = "create";
+	
 	cout << "# ";
 	cin.getline(str, sizeof(str));
 	fflush(stdin);
@@ -123,7 +119,6 @@ int main(int argc, char *argv[])
 	while(str[i] == createHd[i] && str[i] !='\0'){
 		i++;
 	}
-
 
 	if(i==8){
 		i++;
@@ -145,12 +140,9 @@ int main(int argc, char *argv[])
 
 	if(j==6){
 		j++;
+		filer.open(HD);
 		criaArquivo(arquivo);
 	}
-
-
-
-
 
 	system("pause");
 	return 0;
