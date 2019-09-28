@@ -12,10 +12,26 @@
 
 using namespace std;
 
-ifstream filer;
-ofstream filew;
-char HD[100];
+ifstream filer; // abre arquivo em modo de leitura
+ofstream filew; // abre aquivo em modo de escrita
+char HD[100];  // nome do HD
+int posicao=0; // posição disponivel para escreve conteudo do arquivo
+char matriz[40][33]; // HD
+char conteudo[100];// conteudo arquivo
 
+
+void verificaDisponibilidade(){
+    int i=0;
+     for(i=21;i<40;i++){
+	        if(matriz[i][0] =='0'){
+				posicao = i;
+
+
+		}
+
+	}
+
+}
 void criaMatriz(){
     for(int l = 1; l < 40; l++){
 		for(int c = 1; c < 33; c++){
@@ -60,9 +76,7 @@ void criaHD(char str[100] ,int i){
 void criaArquivo(char str[100]){
 	int i=0;
 	int j=0;
-	char matriz[40][33];
 	filer.open(HD);
-	char conteudo[100];
 
     for (i = 0; i < 40; i++){
         for (j = 0; j < 33; j++){
@@ -75,26 +89,10 @@ void criaArquivo(char str[100]){
     filer.close();
 
     filew.open(HD);
-    i=0;
-	int posicao=0;
-
-	for(i=21;i<40;i++){
-	        if(matriz[i][0] =='0'){
-				posicao = i;
-
-
-		}
-
-	}
+	verificaDisponibilidade();
 	printf("%i", posicao);
 	gets(conteudo);
 	fflush(stdin);
-
-
-
-
-
-
 	filew.close();
 
 
