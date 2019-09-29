@@ -18,7 +18,7 @@ using namespace std;
 ifstream filer; // abre arquivo em modo de leitura
 ofstream filew; // abre aquivo em modo de escrita
 char HD[100];  // nome do HD
-char arquivo[100];// nome arquivo
+char arquivo[16];// nome arquivo
 int posicao=0; // posição disponivel para escreve conteudo do arquivo
 char matriz[1024][32]; // HD
 char conteudo[100];// conteudo arquivo
@@ -26,10 +26,14 @@ char comandoHd[100];
 char createHd[9] = "createhd";
 char comandoArq[100];//comando cria arquivo
 char create[7] = "create";
+char excluir[7] = "remove";
 char proximo[200];
+char comandoDelete[100];
 string nome;
 
+
 //Declaração funções
+int iguais(char v[], char d[]);
 void verificaDisponibilidade();
 void criaMatriz();
 void criaHD(int i);
@@ -71,6 +75,22 @@ void nomeArq(int i){
 	
 }
 
+void nomeArqDel(int i){
+	int j=0;
+	while(comandoDelete[i] !='\0'){
+		arquivo[j]=comandoDelete[i];
+
+		if(comandoDelete[i + 1] == '\0'){
+			arquivo[j+1] = comandoDelete[i+1];
+		}
+		i++;
+		j++;
+
+	}
+	cout<<arquivo;
+	
+}
+
 void leituraHD(){
 	int i=0;
 	int j=0;
@@ -98,6 +118,17 @@ void verificaDisponibilidade(){
 
 	}
 
+}
+
+int iguais(char v[], char d[]){
+    int c = 0;
+    while(v[c] != 0 ){
+        if(v[c] != d[c]){
+            return 0;
+        }
+        c++;
+    }
+    return 1;
 }
 void criaMatriz(){
     for (int i = 0; i<1024; i++){
@@ -136,12 +167,20 @@ void criaHD(int i){
 
 }
 
-int confirmaDisponibilidadeA(){
-    for (int i = 20; i<1024; i++){
-        if(matriz[i][0] == '0'){
-            return i;
-        }
+int * confirmaDisponibilidadeA(int n){
+	int *disponiveis = new int[n];
+	int m;
+	int i;
+	for(m = 0; m < n;m++){
+	    for (i= 20; i<1024; i++){
+            if(matriz[i][0] == '0'){
+				disponiveis[m] = i;
+				matriz[i][0] = '1';
+            	break;
+        	}
+		}
     }
+    return disponiveis;
 }
 
 void criaProximo(int i){
@@ -175,41 +214,53 @@ void criaProximo(int i){
     return;
 }
 
-void incrementaProximo(){
-    int k = 3;
-    int valor;
-    int estourou = 0;
-    valor = proximo[k] - '0';
-    if (valor >=0 && valor <= 8){
-        proximo[k] = proximo[k] + 1;
-    }
-    else{
-        proximo[k] = '0';
-        estourou = 1;
-    }
-    k = 2;
-    if (estourou == 1){
-        while(estourou == 1 || k == 0){
-            valor = proximo[k] - '0';
-            if (valor >=0 && valor <= 7){
-                proximo[k] = proximo[k] + 1;
-                estourou = 0;
+void deleteArquivo(){
+    leituraHD();
+    char tempNomeArquivo[16];
+    char tempPosConteudo[4];
+    int posicaoConteudo = 0;
+    for(int i = 0; i < 20; i++){
+        for(int j = 16; j < 32; j++){
+            if(matriz[i][j] != 0) {
+                tempNomeArquivo[j - 16] = matriz[i][j];
             }
-            else if(valor == 8){
-                proximo[k] = '0';
+        }
+        if(iguais(arquivo, tempNomeArquivo)){
+            matriz[i][0] = '0';
+            for(int k = 8; k < 12; k++){
+                tempPosConteudo[k - 8] = matriz[i][k];
+            }
+            posicaoConteudo = atoi(tempPosConteudo);
+        }
+    }
+    matriz[posicaoConteudo][0] = '0';
+    while ( posicaoConteudo != 0){
+        matriz[posicaoConteudo][0] = '0';
+	    for(int k = 4; k < 8; k++){
+	        tempPosConteudo[k - 4] = matriz[posicaoConteudo][k];
+	    }
+	    posicaoConteudo = atoi(tempPosConteudo);
+	}
+   filew.open(nome.c_str());
+    for (int i = 0; i<1024; i++){
+        for (int j = 0; j< 33 ;j++){
+            if(j == 32){
+                filew << endl;
             }
             else{
-                proximo[k] = '1';
+                filew << matriz[i][j];
             }
         }
     }
+    filew.close();
 }
 
-void criaArquivo(int i, char conteudo[200]){
+void escreveArquivo(int i){
     int tamanho = strlen(conteudo);
-    int nLinhas = tamanho/24;
-    int a = confirmaDisponibilidadeA();
-    criaProximo(a+1);
+    int nLinhas = (tamanho/24) + 1;
+    int *a;
+    a = confirmaDisponibilidadeA(nLinhas);
+    criaProximo(a[0]);
     stringstream strs;
     strs  << tamanho;
     string temp_str = strs.str();
@@ -249,20 +300,13 @@ void criaArquivo(int i, char conteudo[200]){
             matriz[i][k] = '0';
         }
         else if ( k >= 4 & k <= 7){
-            //if(pasta){
-            //teste[i][k] = pasta[k-4];
-            //}
-            //else{
             matriz[i][k] = '0';
-            //}
+
         }
         else if ( k >= 8 & k <= 11){
-            //if(pasta){
-            //teste[i][k] = "0";
-            //}
-            //else{
+
             matriz[i][k] = proximo[k-8];
-            //}
+    
         }
         else if ( k >= 12 & k <= 15){
             matriz[i][k] = tamanhoConteudo[k-12];
@@ -271,55 +315,49 @@ void criaArquivo(int i, char conteudo[200]){
             matriz[i][k] = arquivo[k-16];
         }
     }
-    if ((a + nLinhas) <= 1024){
-        for (int j = a; j <= a + nLinhas;j++){
-            for (int k = 0; k < 32; k++){
-                if ( k == 0){
-                    matriz[j][k] = '1';
+      for (int j = 0; j <= (nLinhas - 1);j++){
+		if(j != (nLinhas - 1)){
+            criaProximo(a[(j+1)]);
+		}
+        for (int k = 0; k < 32; k++){
+            if ( k >= 4 & k <= 7){
+                if(j == (nLinhas-1)){
+                    matriz[(a[j])][k] = '0';
                 }
-                else if ( k >= 4 & k <= 7){
-                    if(nLinhas > 0 && j != (a +nLinhas)){
-                        matriz[j][k] = proximo[k-4];
-                    }
-                    else{
-                        matriz[j][k] = '0';
-                    }
-                }
-                else if ( k >= 8 & k <= 31){
-                    if (conteudo[atual] != 0){
-                        matriz[j][k] = conteudo[atual];
-                        atual++;
-                    }
+                else{
+                    matriz[(a[j])][k] = proximo[k-4];
                 }
             }
-            incrementaProximo();
-        }
-    }
-    else{
-        cout << "overflow de memoria";
-    }
+           else if ( k >= 8 & k <= 31){
+				if (conteudo[atual] != 0){
+                	matriz[a[j]][k] = conteudo[atual];
+                	atual++;
+				}
+            }
+    	}
+	}
 }
 
 
 
 
 
-void confirmaDisponibilidadeD(char conteudo[200]){
-    for (int i = 0; i<20; i++){
+void confirmaDisponibilidadeD(){
+    for (int i = 0; i<=20; i++){
         if(matriz[i][0] == '0'){
-            criaArquivo(i, conteudo);
+            escreveArquivo(i);
             filew.open(nome.c_str());
-            for (int i = 0; i<1024; i++){
-                for (int j = 0; j< 33 ;j++){
-                    if(j == 32){
-                        filew << endl;
-                    }
-                    else{
-                        filew << matriz[i][j];
-                    }
-                }
-            }
-            filew.close();
+		    for (int i = 0; i<1024; i++){
+		        for (int j = 0; j< 33 ;j++){
+		            if(j == 32){
+		                filew << endl;
+		            }
+		            else{
+		                filew << matriz[i][j];
+		            }
+		        }
+		    }
+		    filew.close();
             return;
         }
     }
@@ -329,12 +367,12 @@ void criaArquivo(int j){
 	
 	nomeArq(j);
 	leituraHD();
-
 	cout<<"Digite o conteudo do arquivo:"<<endl;
 	gets(conteudo);
 	fflush(stdin);
-	confirmaDisponibilidadeD(conteudo);
+	confirmaDisponibilidadeD();
 	memset(arquivo,'\0', 16);
+	
 
 }
 
@@ -373,9 +411,28 @@ int main(int argc, char *argv[])
 
 	if(j==6){
 		j++;
-		filer.open(HD);
 		criaArquivo(j);
 	}
+	
+	cin.getline(comandoDelete, sizeof(comandoDelete));
+	fflush(stdin);
+	
+	j=0;
+	
+	while(comandoDelete[j] == excluir[j] && comandoDelete[j] !='\0'){
+		j++;
+	}
+	
+	if(j==6){
+		j++;
+		nomeArq(j);
+		deleteArquivo();
+		cout<<"Arquivo deletado com sucesso!\n";
+	}
+	
+	
+	
+	
 
 	system("pause");
 	return 0;
