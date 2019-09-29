@@ -12,6 +12,8 @@
 
 using namespace std;
 
+
+//Declaração variaveis
 ifstream filer; // abre arquivo em modo de leitura
 ofstream filew; // abre aquivo em modo de escrita
 char HD[100];  // nome do HD
@@ -20,10 +22,53 @@ char matriz[40][33]; // HD
 char conteudo[100];// conteudo arquivo
 char str[100];
 char createHd[9] = "createhd";
-char arquivo[100];
+char arquivo[100];//comando
 char nome[100];
 char create[7] = "create";
 
+//Declaração funções
+void verificaDisponibilidade();
+void criaMatriz();
+void criaHD(char str[100], int i);
+void criaArquivo(char str[100]);
+void leituraHD();
+void nomeArquivo();
+void nomeHD(char str[100], int i);
+string formataTxT(char* txt);
+
+void nomeHD(char str[100], int i){
+	int j=0;
+	while(str[i] !='\0'){
+		HD[j]=str[i];
+
+		if(str[i + 1] == '\0'){
+			HD[j+1] = str[i+1];
+		}
+		i++;
+		j++;
+
+	}
+	
+	
+	
+}
+
+void leituraHD(){
+	int i=0;
+	int j=0;
+	string nome = formataTxT(HD);
+	filer.open(nome.c_str());
+
+    for (i = 0; i < 40; i++){
+        for (j = 0; j < 33; j++){
+	        filer >> matriz[i][j];
+
+        }
+
+    }
+    
+    filer.close();
+}
 
 void verificaDisponibilidade(){
     int i=0;
@@ -59,49 +104,30 @@ void criaMatriz(){
 	}
 }
 
-void criaHD(char str[100] ,int i){
-	int j=0;
-	while(str[i] !='\0'){
-		HD[j]=str[i];
-
-		if(str[i + 1] == '\0'){
-			HD[j+1] = str[i+1];
-		}
-		i++;
-		j++;
-
-	}
+string formataTxT(char* txt){
+	string nomeHD = txt;
+	nomeHD += ".txt";
+	return nomeHD;
 	
+}
+
+void criaHD(int i){
+	nomeHD(str,i);
 	cout << "# " << HD << "> ";
-	strcat(HD, ".txt");
-	filew.open(HD);
+	string nome = formataTxT(HD);
+	filew.open(nome.c_str());
+	criaMatriz();
+	filew.close();
 
 
 }
 void criaArquivo(char str[100]){
-	int i=0;
-	int j=0;
-	filer.open(HD);
 
-    for (i = 0; i < 40; i++){
-        for (j = 0; j < 33; j++){
-	        filer >> matriz[i][j];
-
-        }
-
-    }
-
-    filer.close();
-
-    filew.open(HD);
+	leituraHD();
 	verificaDisponibilidade();
 	printf("%i", posicao);
 	gets(conteudo);
 	fflush(stdin);
-	filew.close();
-
-
-
 
 }
 
@@ -122,7 +148,7 @@ int main(int argc, char *argv[])
 
 	if(i==8){
 		i++;
-		criaHD(str, i);
+		criaHD(i);
 		criaMatriz();
 		filew.close();
 
