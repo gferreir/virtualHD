@@ -22,7 +22,7 @@ char arquivo[16];// nome arquivo
 int posicao=0; // posição disponivel para escreve conteudo do arquivo
 char matriz[1024][32]; // HD
 char conteudo[100];// conteudo arquivo
-char comandoHd[100];
+char comando[100];
 char createHd[9] = "createhd";
 char comandoArq[100];//comando cria arquivo
 char create[7] = "create";
@@ -45,11 +45,11 @@ string formataTxT(char* txt);
 
 void nomeHD(int i){
 	int j=0;
-	while(comandoHd[i] !='\0'){
-		HD[j]=comandoHd[i];
+	while(comando[i] !='\0'){
+		HD[j]=comando[i];
 
-		if(comandoHd[i + 1] == '\0'){
-			HD[j+1] = comandoHd[i+1];
+		if(comando[i + 1] == '\0'){
+			HD[j+1] = comando[i+1];
 		}
 		i++;
 		j++;
@@ -62,11 +62,11 @@ void nomeHD(int i){
 
 void nomeArq(int i){
 	int j=0;
-	while(comandoArq[i] !='\0'){
-		arquivo[j]=comandoArq[i];
+	while(comando[i] !='\0'){
+		arquivo[j]=comando[i];
 
-		if(comandoArq[i + 1] == '\0'){
-			arquivo[j+1] = comandoArq[i+1];
+		if(comando[i + 1] == '\0'){
+			arquivo[j+1] = comando[i+1];
 		}
 		i++;
 		j++;
@@ -77,11 +77,11 @@ void nomeArq(int i){
 
 void nomeArqDel(int i){
 	int j=0;
-	while(comandoDelete[i] !='\0'){
-		arquivo[j]=comandoDelete[i];
+	while(comando[i] !='\0'){
+		arquivo[j]=comando[i];
 
-		if(comandoDelete[i + 1] == '\0'){
-			arquivo[j+1] = comandoDelete[i+1];
+		if(comando[i + 1] == '\0'){
+			arquivo[j+1] = comando[i+1];
 		}
 		i++;
 		j++;
@@ -216,6 +216,7 @@ void criaProximo(int i){
 
 void deleteArquivo(){
     leituraHD();
+    cout << "# " << HD << "> ";
     char tempNomeArquivo[16];
     char tempPosConteudo[4];
     int posicaoConteudo = 0;
@@ -366,6 +367,7 @@ void confirmaDisponibilidadeD(){
 void criaArquivo(int j){
 	
 	nomeArq(j);
+	cout << "# " << HD << "> ";
 	leituraHD();
 	cout<<"Digite o conteudo do arquivo:"<<endl;
 	gets(conteudo);
@@ -381,55 +383,39 @@ int main(int argc, char *argv[])
 {
 	
 	cout << "# ";
-	cin.getline(comandoHd, sizeof(comandoHd));
-	fflush(stdin);
-
 	int i =0, j = 0;
+	char fim[5] = "exit";
 
+	while(true){
+        int i;
+	    int k = 0;
+	    cin.getline(comando, sizeof(comando));
+	    fflush(stdin);
 
-	while(comandoHd[i] == createHd[i] && comandoHd[i] !='\0'){
-		i++;
-	}
+	    if (iguais(createHd, comando)){
+			int i=9;
+			criaHD(i);
+		    criaMatriz();
+	    }
+	    else if (iguais(create, comando)){
+	        int j=7;
+		    criaArquivo(j);
+	    }
+	    else if(iguais(excluir, comando)){
+	        int j=7;
+	        nomeArq(j);
+	        deleteArquivo();
+	    }
+	    else if(iguais("exit",comando)){
+	        return 0;
+	    }
+	    
 
-	if(i==8){
-		i++;
-		criaHD(i);
-		criaMatriz();
-		filew.close();
-
-	}else{
-		cout<< "Não foi possivel criar o HD";
-	}
-
-
-	cin.getline(comandoArq, sizeof(comandoArq));
-	fflush(stdin);
-
-	while(comandoArq[j] == create[j] && comandoArq[j] !='\0'){
-		j++;
-	}
-
-	if(j==6){
-		j++;
-		criaArquivo(j);
-	}
-	
-	cin.getline(comandoDelete, sizeof(comandoDelete));
-	fflush(stdin);
-	
-	j=0;
-	
-	while(comandoDelete[j] == excluir[j] && comandoDelete[j] !='\0'){
-		j++;
 	}
 	
-	if(j==6){
-		j++;
-		nomeArq(j);
-		deleteArquivo();
-		cout<<"Arquivo deletado com sucesso!\n";
-	}
-	
+
+
+
 	
 	
 	
