@@ -588,15 +588,18 @@ int main(int argc, char *argv[])
 			int i=9;
 			criaHD(i);
 		    criaMatriz();
+		    *cd = false;
 	    }
 	    else if (iguais(create, comando)){
 	        int j=7;
 		    criaArquivo(j);
+		    *cd =false;
 	    }
 	    else if(iguais(excluir, comando)){
 	        int j=7;
 	        nomeArq(j);
 	        deleteArquivo();
+	        *cd = false;
 	    }
 	    else if(iguais("cd", comando)){
 	    	memset(nomePastaNavegacao,'\0', 16);
