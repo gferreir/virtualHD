@@ -321,7 +321,11 @@ void escreveArquivo(int i){
 		}
         for (int k = 0; k < 32; k++){
             if ( k >= 4 & k <= 7){
-                if(j == (nLinhas-1)){
+                if(j == (nLinhas-1) && j==0){
+                    matriz[(a[j])][k] = proximo[k-4];
+                }else if(j == (nLinhas-1) && j!=0){
+                    matriz[(a[j])][k] = '0';
+                }else if(j != (nLinhas-1) && j!=0){
                     matriz[(a[j])][k] = '0';
                 }
                 else{
