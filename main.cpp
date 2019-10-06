@@ -560,21 +560,21 @@ int main(int argc, char *argv[])
 	
 	int i =0, j = 0;
 	char fim[5] = "exit";
-	bool cd = false;
+	bool *cd = new bool;
+	*cd = false;
 
 	while(true){
         int i;
 	    int k = 0;
-	    cd = false;
-	     if(estadoComando == 3){
+	     if(*cd == false){
 	        string nomeDoComando = nomeHd;
-	        string nomeDaPasta = nomePastaNavegacao;
-	        pastas = pastas +  "\\" + nomeDaPasta;
 	        string comandoComNome = "# " + nomeDoComando + pastas + "> ";
 	        cout << comandoComNome;
 	    }
 	    else{
 	        string nomeDoComando = nomeHd;
+	        string nomeDaPasta = nomePastaNavegacao;
+	        pastas = pastas +  "\\" + nomeDaPasta;
 	        string comandoComNome = "# " + nomeDoComando + pastas + "> ";
 	        cout << comandoComNome;
 	    }
@@ -601,6 +601,7 @@ int main(int argc, char *argv[])
 	            nomePastaNavegacao[k] = comando[i];
 	            k++;
 	        }
+	        *cd=true;
 	        estadoComando =3;
         	listaPastasArquivos();
 		}
@@ -609,7 +610,7 @@ int main(int argc, char *argv[])
 	            nomePasta[k] = comando[i];
 	            k++;
        		 }
-       		 
+       		 *cd = false;
        		 estadoComando=4;
 			confirmaDisponibilidadeP();
 		}
