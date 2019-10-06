@@ -158,7 +158,6 @@ string formataTxT(char* txt){
 
 void criaHD(int i){
 	nomeHD(i);
-	cout << "# " << HD << "> ";
 	nome = formataTxT(HD);
 	filew.open(nome.c_str());
 	criaMatriz();
@@ -389,6 +388,9 @@ int main(int argc, char *argv[])
 	while(true){
         int i;
 	    int k = 0;
+	    if(HD[0]!= '\0'){
+	    	cout << "# " << HD << "> ";
+		}
 	    cin.getline(comando, sizeof(comando));
 	    fflush(stdin);
 
