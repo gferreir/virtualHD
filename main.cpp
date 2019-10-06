@@ -30,6 +30,11 @@ char excluir[7] = "remove";
 char proximo[200];
 char comandoDelete[100];
 string nome;
+char nomePasta[16]; //nome da pasta
+char nomePastaNavegacao[16]; // nome da pasta para navegaÃ§Ã£o
+char lista[20][16];
+string pastas; 
+char nomeHd[20];
 
 
 //Declaração funções
@@ -42,14 +47,22 @@ void leituraHD();
 void nomeArquivo();
 void nomeHD(int i);
 string formataTxT(char* txt);
+void listaPastasArquivos();
+void confirmaDisponibilidadeP();
+void criaPasta(int i);
+int estadoComando=0;
+void verificaDisponibilidadeArq();
+
 
 void nomeHD(int i){
 	int j=0;
 	while(comando[i] !='\0'){
 		HD[j]=comando[i];
+		nomeHd[j]=comando[i];
 
 		if(comando[i + 1] == '\0'){
 			HD[j+1] = comando[i+1];
+			nomeHd[j+1]=comando[i+1];
 		}
 		i++;
 		j++;
@@ -120,6 +133,145 @@ void verificaDisponibilidade(){
 
 }
 
+void listaPastasArquivos(){
+    leituraHD();
+    char tempNomePasta[16];
+    char tempPosHD[4];
+    tempPosHD[0] = '0';
+    tempPosHD[1] = '0';
+    tempPosHD[2] = '0';
+    tempPosHD[3] = '0';
+    for(int i = 0; i < 20; i++){
+        if(matriz[i][2] == '1'){
+            for(int j = 16; j < 32; j++){
+                if(matriz[i][j] != 0) {
+                    tempNomePasta[j - 16] = matriz[i][j];
+                }
+            }
+            if(iguais(nomePastaNavegacao, tempNomePasta)){
+                stringstream strs;
+                strs  << i;
+                string temp_str = strs.str();
+                if(strlen(temp_str.c_str()) == 1){
+                    tempPosHD[2] = '0';
+                    tempPosHD[3] = (char) temp_str.c_str()[0];
+                }
+                if(strlen(temp_str.c_str()) == 2){
+                    tempPosHD[2] = (char) temp_str.c_str()[0];
+                    tempPosHD[3] = (char) temp_str.c_str()[1];
+                }
+                break;
+            }
+        }
+    }
+    int k;
+    for(k = 0; k < 20; k++){
+        if(lista[k][0] == 0){
+            break;
+        }
+    }
+    for(int i = 0; i < 20; i++){
+        if(matriz[i][4] == tempPosHD[0] && matriz[i][5] == tempPosHD[1] && matriz[i][6] == tempPosHD[2] && matriz[i][7] == tempPosHD[3]){
+            for(int j = 16; j < 32; j++){
+                if(matriz[i][j] != 0) {
+                    lista[k][j - 16] = matriz[i][j];
+                }
+            }
+        }
+    }
+
+
+}
+
+
+void confirmaDisponibilidadeP(){
+    leituraHD();
+    for (int i = 0; i<=20; i++){
+        if(matriz[i][0] == '0'){
+            criaPasta(i);
+            filew.open(nome.c_str());
+		    for (int i = 0; i<1024; i++){
+		        for (int j = 0; j< 33 ;j++){
+		            if(j == 32){
+		                filew << endl;
+		            }
+		            else{
+		                filew << matriz[i][j];
+		            }
+		        }
+		    }
+		    filew.close();
+            memset(nomePasta,'\0', 16);
+            return;
+        }
+    }
+    
+}
+
+int verificaPasta(){
+    char tempNomePasta[16];
+    for(int i = 0; i < 20; i++){
+        if(matriz[i][2] == '1'){
+            for(int j = 16; j < 32; j++){
+                if(matriz[i][j] != 0) {
+                    tempNomePasta[j - 16] = matriz[i][j];
+                }
+            }
+            if(iguais(nomePastaNavegacao, tempNomePasta)){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+void criaPasta(int i){
+    int l;
+    l = verificaPasta();
+    l++;
+    for (int k = 0; k < 32; k++){
+        if ( k == 0){
+            matriz[i][k] = '1';
+        }
+        else if ( k == 2){
+            matriz[i][k] = '1';
+        }
+        else if ( k >= 4 & k <= 7){
+            if(l !=0){
+                char tempPosHD[4];
+                tempPosHD[0] = '0';
+                tempPosHD[1] = '0';
+                tempPosHD[2] = '0';
+                tempPosHD[3] = '0';
+                stringstream strs;
+                strs  << l;
+                string temp_str = strs.str();
+                if(strlen(temp_str.c_str()) == 1){
+                    tempPosHD[2] = '0';
+                    tempPosHD[3] = (char) temp_str.c_str()[0];
+                }
+                if(strlen(temp_str.c_str()) == 2){
+                    tempPosHD[2] = (char) temp_str.c_str()[0];
+                    tempPosHD[3] = (char) temp_str.c_str()[1];
+                }
+                matriz[i][k] = tempPosHD[k-4];
+            }
+            else{
+                matriz[i][k] = '0';
+            }
+        }
+        else if ( k >= 8 & k <= 11){
+            matriz[i][k] = '0';
+        }
+        else if ( k >= 12 & k <= 15){
+            matriz[i][k] = '0';
+        }
+        else if ( k >= 16 & k <= 31){
+            matriz[i][k] = nomePasta[k-16];
+        }
+    }
+}
+
 int iguais(char v[], char d[]){
     int c = 0;
     while(v[c] != 0 ){
@@ -166,7 +318,7 @@ void criaHD(int i){
 
 }
 
-int * confirmaDisponibilidadeA(int n){
+int * verificaDisponibilidadeConteudo(int n){
 	int *disponiveis = new int[n];
 	int m;
 	int i;
@@ -259,7 +411,7 @@ void escreveArquivo(int i){
     int tamanho = strlen(conteudo);
     int nLinhas = (tamanho/24) + 1;
     int *a;
-    a = confirmaDisponibilidadeA(nLinhas);
+    a = verificaDisponibilidadeConteudo(nLinhas);
     criaProximo(a[0]);
     stringstream strs;
     strs  << tamanho;
@@ -289,6 +441,10 @@ void escreveArquivo(int i){
         tamanhoConteudo[2] = (char) temp_str.c_str()[2];
         tamanhoConteudo[3] = (char) temp_str.c_str()[3];
     }
+    
+    int l;
+    l = verificaPasta();
+    l++;
 
     int atual = 0;
 
@@ -300,7 +456,28 @@ void escreveArquivo(int i){
             matriz[i][k] = '0';
         }
         else if ( k >= 4 & k <= 7){
-            matriz[i][k] = '0';
+              if(l !=0){
+            	char tempPosHD[4];	
+				tempPosHD[0] = '0';  
+				tempPosHD[1] = '0';
+                tempPosHD[2] = '0';              
+				tempPosHD[3] = '0';
+                stringstream strs;
+                strs  << l;
+                string temp_str = strs.str();
+                if(strlen(temp_str.c_str()) == 1){
+                    tempPosHD[2] = '0';
+                    tempPosHD[3] = (char) temp_str.c_str()[0];
+                }
+                if(strlen(temp_str.c_str()) == 2){
+                    tempPosHD[2] = (char) temp_str.c_str()[0];
+                    tempPosHD[3] = (char) temp_str.c_str()[1];
+                }
+                matriz[i][k] = tempPosHD[k-4];
+            }
+            else{
+                matriz[i][k] = '0';
+            }
 
         }
         else if ( k >= 8 & k <= 11){
@@ -346,7 +523,7 @@ void escreveArquivo(int i){
 
 
 
-void confirmaDisponibilidadeD(){
+void verificaDisponibilidadeArq(){
     for (int i = 0; i<=20; i++){
         if(matriz[i][0] == '0'){
             escreveArquivo(i);
@@ -370,31 +547,40 @@ void confirmaDisponibilidadeD(){
 void criaArquivo(int j){
 	
 	nomeArq(j);
-	cout << "# " << HD << "> ";
 	leituraHD();
 	cout<<"Digite o conteudo do arquivo:"<<endl;
 	gets(conteudo);
 	fflush(stdin);
-	confirmaDisponibilidadeD();
-	memset(arquivo,'\0', 16);
-	
+	verificaDisponibilidadeArq();
+	memset(arquivo,'\0', 16);	
 
 }
+
 
 
 int main(int argc, char *argv[])
 {
 	
-	cout << "# ";
 	int i =0, j = 0;
 	char fim[5] = "exit";
+	bool *cd = new bool;
+	*cd = false;
 
 	while(true){
         int i;
 	    int k = 0;
-	    if(HD[0]!= '\0'){
-	    	cout << "# " << HD << "> ";
-		}
+	     if(*cd == false){
+	        string nomeDoComando = nomeHd;
+	        string comandoComNome = "# " + nomeDoComando + pastas + "> ";
+	        cout << comandoComNome;
+	    }
+	    else{
+	        string nomeDoComando = nomeHd;
+	        string nomeDaPasta = nomePastaNavegacao;
+	        pastas = pastas +  "\\" + nomeDaPasta;
+	        string comandoComNome = "# " + nomeDoComando + pastas + "> ";
+	        cout << comandoComNome;
+	    }
 	    cin.getline(comando, sizeof(comando));
 	    fflush(stdin);
 
@@ -412,6 +598,23 @@ int main(int argc, char *argv[])
 	        nomeArq(j);
 	        deleteArquivo();
 	    }
+	    else if(iguais("cd", comando)){
+	    	memset(nomePastaNavegacao,'\0', 16);
+	        for(i = 3; comando[i] != 0; i++){
+	            nomePastaNavegacao[k] = comando[i];
+	            k++;
+	        }
+	        *cd=true;
+        	listaPastasArquivos();
+		}
+		else if(iguais("mkdir", comando)){
+			for(i = 6; comando[i] != 0; i++){
+	            nomePasta[k] = comando[i];
+	            k++;
+       		 }
+       		 *cd = false;
+			 confirmaDisponibilidadeP();
+		}
 	    else if(iguais("exit",comando)){
 	        return 0;
 	    }
