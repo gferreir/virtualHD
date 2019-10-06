@@ -51,6 +51,7 @@ void listaPastasArquivos();
 void confirmaDisponibilidadeP();
 void criaPasta(int i);
 int estadoComando=0;
+void verificaDisponibilidadeArq();
 
 
 void nomeHD(int i){
@@ -207,7 +208,7 @@ void confirmaDisponibilidadeP(){
     
 }
 
-int pesquisa(){
+int verificaPasta(){
     char tempNomePasta[16];
     for(int i = 0; i < 20; i++){
         if(matriz[i][2] == '1'){
@@ -226,7 +227,7 @@ int pesquisa(){
 
 void criaPasta(int i){
     int l;
-    l = pesquisa();
+    l = verificaPasta();
     l++;
     for (int k = 0; k < 32; k++){
         if ( k == 0){
@@ -317,7 +318,7 @@ void criaHD(int i){
 
 }
 
-int * confirmaDisponibilidadeA(int n){
+int * verificaDisponibilidadeConteudo(int n){
 	int *disponiveis = new int[n];
 	int m;
 	int i;
@@ -410,7 +411,7 @@ void escreveArquivo(int i){
     int tamanho = strlen(conteudo);
     int nLinhas = (tamanho/24) + 1;
     int *a;
-    a = confirmaDisponibilidadeA(nLinhas);
+    a = verificaDisponibilidadeConteudo(nLinhas);
     criaProximo(a[0]);
     stringstream strs;
     strs  << tamanho;
@@ -442,7 +443,7 @@ void escreveArquivo(int i){
     }
     
     int l;
-    l = pesquisa();
+    l = verificaPasta();
     l++;
 
     int atual = 0;
@@ -518,7 +519,7 @@ void escreveArquivo(int i){
 
 
 
-void confirmaDisponibilidadeD(){
+void verificaDisponibilidadeArq(){
     for (int i = 0; i<=20; i++){
         if(matriz[i][0] == '0'){
             escreveArquivo(i);
@@ -542,14 +543,12 @@ void confirmaDisponibilidadeD(){
 void criaArquivo(int j){
 	
 	nomeArq(j);
-	cout << "# " << HD << "> ";
 	leituraHD();
 	cout<<"Digite o conteudo do arquivo:"<<endl;
 	gets(conteudo);
 	fflush(stdin);
-	confirmaDisponibilidadeD();
-	memset(arquivo,'\0', 16);
-	
+	verificaDisponibilidadeArq();
+	memset(arquivo,'\0', 16);	
 
 }
 
@@ -602,7 +601,6 @@ int main(int argc, char *argv[])
 	            k++;
 	        }
 	        *cd=true;
-	        estadoComando =3;
         	listaPastasArquivos();
 		}
 		else if(iguais("mkdir", comando)){
@@ -611,8 +609,7 @@ int main(int argc, char *argv[])
 	            k++;
        		 }
        		 *cd = false;
-       		 estadoComando=4;
-			confirmaDisponibilidadeP();
+			 confirmaDisponibilidadeP();
 		}
 	    else if(iguais("exit",comando)){
 	        return 0;
