@@ -14,12 +14,12 @@
 using namespace std;
 
 
-//Declaração variaveis
+//DeclaraÃ§Ã£o variaveis
 ifstream filer; // abre arquivo em modo de leitura
 ofstream filew; // abre aquivo em modo de escrita
 char HD[100];  // nome do HD
 char arquivo[16];// nome arquivo
-int posicao=0; // posição disponivel para escreve conteudo do arquivo
+int posicao=0; // posiÃ§Ã£o disponivel para escreve conteudo do arquivo
 char matriz[1024][32]; // HD
 char conteudo[100];// conteudo arquivo
 char comando[100];
@@ -31,13 +31,15 @@ char proximo[200];
 char comandoDelete[100];
 string nome;
 char nomePasta[16]; //nome da pasta
-char nomePastaNavegacao[16]; // nome da pasta para navegaÃ§Ã£o
+char nomePastaNavegacao[16]; // nome da pasta para navegaÃƒÂ§ÃƒÂ£o
 char lista[20][16];
-string pastas; 
+string pastas;
 char nomeHd[20];
+int temPasta=0;
+bool *cd = new bool;
 
 
-//Declaração funções
+//DeclaraÃ§Ã£o funÃ§Ãµes
 int iguais(char v[], char d[]);
 void verificaDisponibilidade();
 void criaMatriz();
@@ -68,9 +70,9 @@ void nomeHD(int i){
 		j++;
 
 	}
-	
-	
-	
+
+
+
 }
 
 void nomeArq(int i){
@@ -85,7 +87,7 @@ void nomeArq(int i){
 		j++;
 
 	}
-	
+
 }
 
 void nomeArqDel(int i){
@@ -101,7 +103,7 @@ void nomeArqDel(int i){
 
 	}
 	cout<<arquivo;
-	
+
 }
 
 void leituraHD(){
@@ -116,7 +118,7 @@ void leituraHD(){
         }
 
     }
-    
+
     filer.close();
 }
 
@@ -160,6 +162,7 @@ void listaPastasArquivos(){
                     tempPosHD[2] = (char) temp_str.c_str()[0];
                     tempPosHD[3] = (char) temp_str.c_str()[1];
                 }
+                temPasta++;
                 break;
             }
         }
@@ -205,7 +208,7 @@ void confirmaDisponibilidadeP(){
             return;
         }
     }
-    
+
 }
 
 int verificaPasta(){
@@ -305,7 +308,7 @@ string formataTxT(char* txt){
 	string nomeHD = txt;
 	nomeHD += ".txt";
 	return nomeHD;
-	
+
 }
 
 void criaHD(int i){
@@ -363,6 +366,53 @@ void criaProximo(int i){
         proximo[3] = (char) temp_str.c_str()[3];
     }
     return;
+}
+
+void listaArquivos(){
+    char bloco[5];
+    int linhasUsadas=0;
+    int x=0;
+    leituraHD();
+    for(int i=0;i<20;i++){
+		if(matriz[i][0] == '1'){
+			linhasUsadas++;
+		}
+	}
+	
+	for(x=0;x<linhasUsadas;x++){
+		for(int y=4;y<8;y++){
+			bloco[0] = matriz[x][y];
+			y++;
+			bloco[1] = matriz[x][y];
+			y++;
+			bloco[2] = matriz[x][y];
+			y++;
+			bloco[3] = matriz[x][y];
+		}
+		if(temPasta==0){
+			if(iguais("0000", bloco )){
+				for(int j=16;j<31;j++){
+					if(matriz[x][j]!='\0'){
+					cout<<matriz[x][j];
+				}
+
+				}
+				for(int j=12;j<16;j++){
+					if(matriz[x][j]!='0'){
+					cout<<" "<<matriz[x][j]<<" bytes";
+					}
+				}
+			}
+			cout<<endl;
+		}
+		else{
+		*cd =false;
+	}
+}
+		
+	
+
+    
 }
 
 void deleteArquivo(){
@@ -441,7 +491,7 @@ void escreveArquivo(int i){
         tamanhoConteudo[2] = (char) temp_str.c_str()[2];
         tamanhoConteudo[3] = (char) temp_str.c_str()[3];
     }
-    
+
     int l;
     l = verificaPasta();
     l++;
@@ -457,10 +507,10 @@ void escreveArquivo(int i){
         }
         else if ( k >= 4 & k <= 7){
               if(l !=0){
-            	char tempPosHD[4];	
-				tempPosHD[0] = '0';  
+            	char tempPosHD[4];
+				tempPosHD[0] = '0';
 				tempPosHD[1] = '0';
-                tempPosHD[2] = '0';              
+                tempPosHD[2] = '0';
 				tempPosHD[3] = '0';
                 stringstream strs;
                 strs  << l;
@@ -483,7 +533,7 @@ void escreveArquivo(int i){
         else if ( k >= 8 & k <= 11){
 
             matriz[i][k] = proximo[k-8];
-    
+
         }
         else if ( k >= 12 & k <= 15){
             matriz[i][k] = tamanhoConteudo[k-12];
@@ -545,14 +595,14 @@ void verificaDisponibilidadeArq(){
 }
 
 void criaArquivo(int j){
-	
+
 	nomeArq(j);
 	leituraHD();
 	cout<<"Digite o conteudo do arquivo:"<<endl;
 	gets(conteudo);
 	fflush(stdin);
 	verificaDisponibilidadeArq();
-	memset(arquivo,'\0', 16);	
+	memset(arquivo,'\0', 16);
 
 }
 
@@ -560,10 +610,10 @@ void criaArquivo(int j){
 
 int main(int argc, char *argv[])
 {
-	
+
 	int i =0, j = 0;
 	char fim[5] = "exit";
-	bool *cd = new bool;
+	
 	*cd = false;
 
 	while(true){
@@ -601,6 +651,10 @@ int main(int argc, char *argv[])
 	        deleteArquivo();
 	        *cd = false;
 	    }
+	    else if(iguais("dir", comando)){
+            listaArquivos();
+            
+		}
 	    else if(iguais("cd", comando)){
 	    	memset(nomePastaNavegacao,'\0', 16);
 	        for(i = 3; comando[i] != 0; i++){
@@ -621,16 +675,16 @@ int main(int argc, char *argv[])
 	    else if(iguais("exit",comando)){
 	        return 0;
 	    }
-	    
+
 
 	}
-	
 
 
 
-	
-	
-	
+
+
+
+
 
 	system("pause");
 	return 0;
