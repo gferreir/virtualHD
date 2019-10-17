@@ -37,6 +37,7 @@ string pastas;
 char nomeHd[20];
 int temPasta=0;
 bool *cd = new bool;
+char tempPosHD[4];
 
 
 //Declaração funções
@@ -138,7 +139,6 @@ void verificaDisponibilidade(){
 void listaPastasArquivos(){
     leituraHD();
     char tempNomePasta[16];
-    char tempPosHD[4];
     tempPosHD[0] = '0';
     tempPosHD[1] = '0';
     tempPosHD[2] = '0';
@@ -241,7 +241,7 @@ void criaPasta(int i){
         }
         else if ( k >= 4 & k <= 7){
             if(l !=0){
-                char tempPosHD[4];
+                tempPosHD[4];
                 tempPosHD[0] = '0';
                 tempPosHD[1] = '0';
                 tempPosHD[2] = '0';
@@ -405,6 +405,22 @@ void listaArquivos(){
 			}
 			cout<<endl;
 		}
+		else if(iguais(tempPosHD,bloco)){
+			for(int j=16;j<31;j++){
+					if(matriz[x][j]!='\0'){
+					cout<<matriz[x][j];
+				}
+				
+				}
+				for(int j=12;j<16;j++){
+					if(matriz[x][j]!='0'){
+					cout<<" "<<matriz[x][j]<<" bytes";
+					}
+				}
+				
+		cout<<endl;
+		}
+		
 		else{
 		*cd =false;
 	}
@@ -507,7 +523,6 @@ void escreveArquivo(int i){
         }
         else if ( k >= 4 & k <= 7){
               if(l !=0){
-            	char tempPosHD[4];
 				tempPosHD[0] = '0';
 				tempPosHD[1] = '0';
                 tempPosHD[2] = '0';
