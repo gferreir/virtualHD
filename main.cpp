@@ -220,7 +220,10 @@ int verificaPasta(){
                     tempNomePasta[j - 16] = matriz[i][j];
                 }
             }
-            if(iguais(nomePastaNavegacao, tempNomePasta)){
+            if(temPasta==0){
+            	return -1;
+			}
+            else if(iguais(nomePastaNavegacao, tempNomePasta)){
                 return i;
             }
         }
