@@ -38,6 +38,11 @@ char nomeHd[20];
 int temPasta=0;
 bool *cd = new bool;
 char tempPosHD[4];
+char nomeFile[16];
+string linhaConteudo;
+int posicaoConteudo=0;
+
+
 
 
 //Declaração funções
@@ -231,6 +236,95 @@ int verificaPasta(){
     return -1;
 }
 
+int verificaArquivo(char typeArquivo[16]){
+    char charNomeArquivo[16];
+    for(int i = 0; i < 20; i++){
+        if(matriz[i][2] == '0'){
+            for(int j = 16; j < 32; j++){
+                if(matriz[i][j] != 0) {
+                    charNomeArquivo[j - 16] = matriz[i][j];
+                }
+            }
+            if(iguais(typeArquivo, charNomeArquivo)){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+int retornaLinhaConteudo(){
+	int i=0;
+	char conteudoPosicao[2];
+	memset(conteudoPosicao,'\0', 16);
+	char linhaConteudo[2];	
+		for(int j=10;j<12;j++){
+			conteudoPosicao[i]= matriz[posicaoConteudo][j];	
+			i++;		
+		}	
+
+	return atoi(conteudoPosicao);
+
+	
+
+	
+}
+
+int verificaMaisConteudo(){
+	int pos = retornaLinhaConteudo();
+	char novaPosicao[4];
+	memset(novaPosicao,'\0', 16);
+	int i=0;
+	
+    for(int j=4;j<8;j++){
+    	if(matriz[pos][j]!='0'){
+    		novaPosicao[i] = matriz[pos][j];
+    		i++;
+		}
+	}
+	return atoi(novaPosicao);
+    
+}
+
+void exibeType(){
+	char conteudoLinha[100];
+	int posicaoInicial = retornaLinhaConteudo();
+	int posicaoNova = verificaMaisConteudo();
+	int count =0;
+	for(int j=8;j<32;j++){
+		if(matriz[posicaoInicial][j]!='-'){
+			if(count !=20){
+				cout<<matriz[posicaoInicial][j];
+				count++;
+			}else{
+				count =0;
+			}
+			
+		}
+		
+	}
+	
+	cout<<endl;
+	for(int j=8;j<32;j++){
+		if(matriz[posicaoInicial+1][j]!='-'){
+			if(count !=20){
+				cout<<matriz[posicaoInicial+1][j];
+				count++;
+			}else{
+				count =0;
+			}
+		}
+		
+	}
+	cout<<endl;
+	
+	
+	
+	
+	
+	
+}
+
 void criaPasta(int i){
     int l;
     l = verificaPasta();
@@ -383,6 +477,7 @@ void listaArquivos(){
 	}
 	
 	for(x=0;x<linhasUsadas;x++){
+	
 		for(int y=4;y<8;y++){
 			bloco[0] = matriz[x][y];
 			y++;
@@ -392,35 +487,22 @@ void listaArquivos(){
 			y++;
 			bloco[3] = matriz[x][y];
 		}
-		if(temPasta==0){
-			if(iguais("0000", bloco )){
-				for(int j=16;j<31;j++){
-					if(matriz[x][j]!='\0'){
-					cout<<matriz[x][j];
-				}
-
-				}
-				for(int j=12;j<16;j++){
-					if(matriz[x][j]!='0'){
-					cout<<" "<<matriz[x][j]<<" bytes";
-					}
-				}
-			}
-			cout<<endl;
-		}
-		else if(iguais(tempPosHD,bloco)){
+		 if(iguais(tempPosHD,bloco)){
 			for(int j=16;j<31;j++){
 					if(matriz[x][j]!='\0'){
 					cout<<matriz[x][j];
+					
 				}
 				
 				}
+				cout<<" ";
 				for(int j=12;j<16;j++){
 					if(matriz[x][j]!='0'){
-					cout<<" "<<matriz[x][j]<<" bytes";
+					cout<<matriz[x][j];
 					}
 				}
 				
+				cout<<" bytes";
 		cout<<endl;
 		}
 		
@@ -689,6 +771,17 @@ int main(int argc, char *argv[])
        		 }
        		 *cd = false;
 			 confirmaDisponibilidadeP();
+		}
+		else if(iguais("type", comando)){
+			memset(nomeFile,'\0', 16);
+			for(i = 5; comando[i] != 0; i++){
+	            nomeFile[k] = comando[i];
+	            k++;
+       		 }
+       		 posicaoConteudo = verificaArquivo(nomeFile);
+       		 exibeType();
+
+
 		}
 	    else if(iguais("exit",comando)){
 	        return 0;
