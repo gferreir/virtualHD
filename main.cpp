@@ -39,6 +39,7 @@ int temPasta=0;
 bool *cd = new bool;
 char tempPosHD[4];
 char nomeFile[16];
+char nomeFile2[16];
 string linhaConteudo;
 int posicaoConteudo=0;
 char nomeComando[20];
@@ -275,17 +276,17 @@ int retornaLinhaConteudo(){
 	int i=0;
 	char conteudoPosicao[2];
 	memset(conteudoPosicao,'\0', 16);
-	char linhaConteudo[2];	
+	char linhaConteudo[2];
 		for(int j=10;j<12;j++){
-			conteudoPosicao[i]= matriz[posicaoConteudo][j];	
-			i++;		
-		}	
+			conteudoPosicao[i]= matriz[posicaoConteudo][j];
+			i++;
+		}
 
 	return atoi(conteudoPosicao);
 
-	
 
-	
+
+
 }
 
 int verificaMaisConteudo(){
@@ -293,7 +294,7 @@ int verificaMaisConteudo(){
 	char novaPosicao[4];
 	memset(novaPosicao,'\0', 16);
 	int i=0;
-	
+
     for(int j=4;j<8;j++){
     	if(matriz[pos][j]!='0'){
     		novaPosicao[i] = matriz[pos][j];
@@ -301,7 +302,7 @@ int verificaMaisConteudo(){
 		}
 	}
 	return atoi(novaPosicao);
-    
+
 }
 
 void exibeType(){
@@ -317,11 +318,11 @@ void exibeType(){
 			}else{
 				count =0;
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	cout<<endl;
 	for(int j=8;j<32;j++){
 		if(matriz[posicaoInicial+1][j]!='-'){
@@ -332,15 +333,15 @@ void exibeType(){
 				count =0;
 			}
 		}
-		
+
 	}
 	cout<<endl;
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 }
 
 void criaPasta(int i){
@@ -493,9 +494,9 @@ void listaArquivos(){
 			linhasUsadas++;
 		}
 	}
-	
+
 	for(x=0;x<linhasUsadas;x++){
-	
+
 		for(int y=4;y<8;y++){
 			bloco[0] = matriz[x][y];
 			y++;
@@ -509,9 +510,9 @@ void listaArquivos(){
 			for(int j=16;j<31;j++){
 					if(matriz[x][j]!='\0'){
 					cout<<matriz[x][j];
-					
+
 				}
-				
+
 				}
 				cout<<" ";
 				for(int j=12;j<16;j++){
@@ -519,19 +520,19 @@ void listaArquivos(){
 					cout<<matriz[x][j];
 					}
 				}
-				
+
 				cout<<" bytes";
 		cout<<endl;
 		}
-		
+
 		else{
 		*cd =false;
 	}
 }
-		
-	
 
-    
+
+
+
 }
 
 void deleteArquivo(){
@@ -731,7 +732,7 @@ int main(int argc, char *argv[])
 
 	int i =0, j = 0;
 	char fim[5] = "exit";
-	
+
 	*cd = false;
 
 	while(true){
@@ -771,7 +772,7 @@ int main(int argc, char *argv[])
 	    }
 	    else if(iguais("dir", comando)){
             listaArquivos();
-            
+
 		}
 	    else if(iguais("cd", comando)){
 	    	memset(nomePastaNavegacao,'\0', 16);
@@ -801,20 +802,24 @@ int main(int argc, char *argv[])
 
 
 		}else if(iguais("copy", comando)){
-			memset(nomeComando,'\0', 16);
 			int i=5;
 			int j=0;
-			while(comando[i] != '\0'){
-			
-				if(comando[i] !='/'){
-					nomeComando[j] = comando[i];			
-				}else{
-					i++;
-				}
-				i++;
-				j++;
-			}
-			
+			memset(nomeFile,'\0', 16);
+			memset(nomeFile2,'\0', 16);
+			for(i = 5; comando[i] != 0 && comando[i] != 32; i++){
+	            nomeFile[k] = comando[i];
+	            k++;
+       		 }
+
+			 int x=0;
+       		 for(int j=i+1;comando[j] != 0 && comando[j] != 32; j++){
+	            nomeFile2[x] = comando[j];
+	            x++;
+       		 }
+       		 
+			cout << nomeFile <<endl;
+			cout << nomeFile2 <<endl;
+
 			cout<<nomeComando<<endl;
 		}
 	    else if(iguais("exit",comando)){
@@ -823,9 +828,6 @@ int main(int argc, char *argv[])
 
 
 	}
-
-
-
 
 
 
