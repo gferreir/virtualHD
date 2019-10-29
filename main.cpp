@@ -38,7 +38,7 @@ char nomeHd[20];
 int temPasta=0;
 bool *cd = new bool;
 char tempPosHD[4];
-char nomeFile[16];
+char nomeFile[30];
 char nomeFile2[16];
 string linhaConteudo;
 int posicaoConteudo=0;
@@ -804,7 +804,7 @@ int main(int argc, char *argv[])
 		}else if(iguais("copy", comando)){
 			int i=5;
 			int j=0;
-			memset(nomeFile,'\0', 16);
+			memset(nomeFile,'\0', 30);
 			memset(nomeFile2,'\0', 16);
 			for(i = 5; comando[i] != 0 && comando[i] != 32; i++){
 	            nomeFile[k] = comando[i];
@@ -817,10 +817,17 @@ int main(int argc, char *argv[])
 	            x++;
        		 }
        		 
+       		 int barra =0;
+       		 for(int p =0;nomeFile[p];p++){
+				if(nomeFile[p] =='/'){
+					barra++;
+				}
+			}
+       		 
+
 			cout << nomeFile <<endl;
 			cout << nomeFile2 <<endl;
-
-			cout<<nomeComando<<endl;
+			cout << barra <<endl;
 		}
 	    else if(iguais("exit",comando)){
 	        return 0;
