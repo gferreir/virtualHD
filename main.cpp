@@ -41,6 +41,7 @@ char tempPosHD[4];
 char nomeFile[16];
 string linhaConteudo;
 int posicaoConteudo=0;
+char nomeComando[20];
 
 
 
@@ -246,6 +247,23 @@ int verificaArquivo(char typeArquivo[16]){
                 }
             }
             if(iguais(typeArquivo, charNomeArquivo)){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+int validaComando(char comandoCopy[16]){
+    char charNomeArquivo[16];
+    for(int i = 0; i < 20; i++){
+        if(matriz[i][2] == '0'){
+            for(int j = 16; j < 32; j++){
+                if(matriz[i][j] != 0) {
+                    charNomeArquivo[j - 16] = matriz[i][j];
+                }
+            }
+            if(iguais(comandoCopy, charNomeArquivo)){
                 return i;
             }
         }
@@ -782,6 +800,22 @@ int main(int argc, char *argv[])
        		 exibeType();
 
 
+		}else if(iguais("copy", comando)){
+			memset(nomeComando,'\0', 16);
+			int i=5;
+			int j=0;
+			while(comando[i] != '\0'){
+			
+				if(comando[i] !='/'){
+					nomeComando[j] = comando[i];			
+				}else{
+					i++;
+				}
+				i++;
+				j++;
+			}
+			
+			cout<<nomeComando<<endl;
 		}
 	    else if(iguais("exit",comando)){
 	        return 0;
