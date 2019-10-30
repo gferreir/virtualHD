@@ -39,7 +39,7 @@ int temPasta=0;
 bool *cd = new bool;
 char tempPosHD[4];
 char nomeFile[30];
-char nomeFile2[16];
+char nomeFile2[30];
 string linhaConteudo;
 int posicaoConteudo=0;
 char nomeComando[20];
@@ -846,10 +846,11 @@ int main(int argc, char *argv[])
 			int barra =0;
 			string novoNome;
 			string novoNome2;
+			novoNome.clear();
 			conteudoLinha.clear();
 			novoNome2.clear();
 			memset(nomeFile,'\0', 30);
-			memset(nomeFile2,'\0', 16);
+			memset(nomeFile2,'\0', 30);
 			for(i = 5; comando[i] != 0 && comando[i] != 32; i++){
 				if(comando[i] =='/'){
 					barra++;
