@@ -43,6 +43,7 @@ char nomeFile2[16];
 string linhaConteudo;
 int posicaoConteudo=0;
 char nomeComando[20];
+string conteudoLinha;
 
 
 
@@ -342,6 +343,26 @@ void exibeType(){
 
 
 
+}
+
+void recuperaConteudo(){
+	int posicaoInicial = retornaLinhaConteudo();
+	int posicaoNova = verificaMaisConteudo();
+	int count =0;
+	for(int j=8;j<32;j++){
+		if(matriz[posicaoInicial][j]!='-'){
+				conteudoLinha+=matriz[posicaoInicial][j];			
+		}
+
+	}
+	for(int j=8;j<32;j++){
+		if(matriz[posicaoInicial+1][j]!='-'){
+				conteudoLinha+=matriz[posicaoInicial+1][j];		
+		}
+
+	}
+	
+	cout<<conteudoLinha<<endl;
 }
 
 void criaPasta(int i){
@@ -725,6 +746,24 @@ void criaArquivo(int j){
 
 }
 
+void copiaArquivo(string nomeArquivo, string conteudoLinha){
+	
+    
+	arquivo[nomeArquivo.size() + 1];
+	strcpy(arquivo, nomeArquivo.c_str());
+	cout<<arquivo<<endl;
+	leituraHD();
+	conteudo[conteudoLinha.size() + 1];
+	strcpy(conteudo, conteudoLinha.c_str());
+	cout<<conteudo<<endl;
+	fflush(stdin);
+	verificaDisponibilidadeArq();
+	memset(arquivo,'\0', 16);
+	memset(conteudo,'\0', 16);
+	
+
+}
+
 
 
 int main(int argc, char *argv[])
@@ -804,30 +843,78 @@ int main(int argc, char *argv[])
 		}else if(iguais("copy", comando)){
 			int i=5;
 			int j=0;
+			int barra =0;
+			string novoNome;
+			string novoNome2;
+			conteudoLinha.clear();
+			novoNome2.clear();
 			memset(nomeFile,'\0', 30);
 			memset(nomeFile2,'\0', 16);
 			for(i = 5; comando[i] != 0 && comando[i] != 32; i++){
+				if(comando[i] =='/'){
+					barra++;
+				}
 	            nomeFile[k] = comando[i];
 	            k++;
        		 }
 
 			 int x=0;
+			 int barra2 =0;
        		 for(int j=i+1;comando[j] != 0 && comando[j] != 32; j++){
+       		 	if(comando[j] =='/'){
+					barra2++;
+				}
 	            nomeFile2[x] = comando[j];
 	            x++;
        		 }
-       		 
-       		 int barra =0;
-       		 for(int p =0;nomeFile[p];p++){
-				if(nomeFile[p] =='/'){
-					barra++;
-				}
+       		 j=0;
+       		 for(i=0;nomeFile[i] !=0 && nomeFile[i] != 32;i++){
+       		 		if(nomeFile[i] == '/'){
+       		 			barra--;
+       		 			i++;
+					}
+       		 		if(barra ==0){
+       		 			novoNome += nomeFile[i];
+					}
+					
 			}
-       		 
-
-			cout << nomeFile <<endl;
-			cout << nomeFile2 <<endl;
-			cout << barra <<endl;
+			
+			for(i=0;nomeFile2[i] !=0 && nomeFile2[i] != 32;i++){
+       		 		if(nomeFile2[i] == '/'){
+       		 			barra2--;
+       		 			i++;
+					}
+       		 		if(barra2 ==0){
+       		 			novoNome2 += nomeFile2[i];
+					}
+					
+			}
+			
+			
+			
+			
+			char cstr[novoNome.size() + 1];
+			strcpy(cstr, novoNome.c_str());
+				
+			posicaoConteudo = verificaArquivo(cstr);
+			if(posicaoConteudo == -1){
+				cout << "Arquivo não existe" <<endl;
+			}else{
+				cout<<"Recupera conteudo"<<endl;
+				recuperaConteudo();
+				cout<<"Arquivo existe"<<endl;
+				copiaArquivo(novoNome2, conteudoLinha);
+			}
+			
+			cout<<"Nome arquivos"<<endl;
+			cout << cstr << endl;
+			cout << novoNome2 << endl;
+			
+			cout<<"Verifica arquivo existe"<<endl;
+			cout << posicaoConteudo << endl;
+			
+			
+			
 		}
 	    else if(iguais("exit",comando)){
 	        return 0;
