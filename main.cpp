@@ -31,7 +31,8 @@ char proximo[200];
 char comandoDelete[100];
 string nome;
 char nomePasta[16]; //nome da pasta
-char nomePastaNavegacao[16]; // nome da pasta para navegaÃ§Ã£o
+char nomePastaNavegacao[16];
+char pastaTeste[16]; // nome da pasta para navegaÃ§Ã£o
 char lista[20][16];
 string pastas;
 char nomeHd[20];
@@ -248,7 +249,7 @@ int verificaDispPasta(){
                     tempNomePasta[j - 16] = matriz[i][j];
                 }
             }
-            if(iguais(nomePastaNavegacao, tempNomePasta)){
+            if(iguais(pastaTeste, tempNomePasta)){
                 return i;
             }
         }
@@ -921,42 +922,31 @@ int main(int argc, char *argv[])
 					
 			}
 			
-			cout<<"Pasta e arquivo" <<endl;
-			cout<<nomePasta<<endl;
-			cout << novoNome2 << endl;
-			
-			nomePastaNavegacao[nomePasta.size() + 1];
-			strcpy(nomePastaNavegacao, nomePasta.c_str());
-			
-			cout<<nomePastaNavegacao<<endl;
+			pastaTeste[nomePasta.size() + 1];
+			strcpy(pastaTeste, nomePasta.c_str());
+			int validaPasta = verificaDispPasta();
+			if(validaPasta!=-1){
+				nomePastaNavegacao[nomePasta.size() + 1];
+			    strcpy(nomePastaNavegacao, nomePasta.c_str());
+			}
+					
 		
 			char cstr[novoNome.size() + 1];
 			strcpy(cstr, novoNome.c_str());
 				
 			posicaoConteudo = verificaArquivo(cstr);
-			int validaPasta = verificaDispPasta();
-			listaPastasArquivos();
-			cout<<validaPasta<<endl;
 			
-			cout<<"Validacao"<<endl;
-			cout<<posicaoConteudo<<endl;
-			cout<<validaPasta<<endl;
-			if(posicaoConteudo == -1){
-				cout << "Arquivo não existe" <<endl;
-			}else if (validaPasta == -1 && posicaoConteudo != -1){
-				cout<<"Recupera conteudo"<<endl;
+			
+			if (validaPasta == -1 && posicaoConteudo != -1){
+				listaPastasArquivos();
 				recuperaConteudo();
-				cout<<"Arquivo existe"<<endl;
 				copiaArquivo(novoNome2, conteudoLinha);
 				
 			}
 			
 			conteudoLinha.clear();
 
-			if(validaPasta == -1){
-				cout << "Pasta não existe" <<endl;
-				
-			}else if(validaPasta != -1 && posicaoConteudo != -1){
+			if(validaPasta != -1 && posicaoConteudo != -1){
 				listaPastasArquivos();
 				recuperaConteudo();
 				copiaArquivo(novoNome2, conteudoLinha);
