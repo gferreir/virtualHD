@@ -239,6 +239,23 @@ int verificaPasta(){
     return -1;
 }
 
+int verificaDispPasta(){
+    char tempNomePasta[16];
+    for(int i = 0; i < 20; i++){
+        if(matriz[i][2] == '1'){
+            for(int j = 16; j < 32; j++){
+                if(matriz[i][j] != 0) {
+                    tempNomePasta[j - 16] = matriz[i][j];
+                }
+            }
+            if(iguais(nomePastaNavegacao, tempNomePasta)){
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
 int verificaArquivo(char typeArquivo[16]){
     char charNomeArquivo[16];
     for(int i = 0; i < 20; i++){
@@ -846,11 +863,14 @@ int main(int argc, char *argv[])
 			int barra =0;
 			string novoNome;
 			string novoNome2;
+			string nomePasta;
+			nomePasta.clear();
 			novoNome.clear();
 			conteudoLinha.clear();
 			novoNome2.clear();
 			memset(nomeFile,'\0', 30);
 			memset(nomeFile2,'\0', 30);
+			memset(nomePastaNavegacao,'\0', 16);
 			for(i = 5; comando[i] != 0 && comando[i] != 32; i++){
 				if(comando[i] =='/'){
 					barra++;
@@ -889,30 +909,64 @@ int main(int argc, char *argv[])
        		 			novoNome2 += nomeFile2[i];
 					}
 					
+					
+					
 			}
 			
+			for(i=0;nomeFile2[i] !=0 && nomeFile2[i] != 32;i++){
+       		 		if(nomeFile2[i] == '/'){
+       		 			break;
+					}
+    				nomePasta += nomeFile2[i];
+					
+			}
 			
+			cout<<"Pasta e arquivo" <<endl;
+			cout<<nomePasta<<endl;
+			cout << novoNome2 << endl;
 			
+			nomePastaNavegacao[nomePasta.size() + 1];
+			strcpy(nomePastaNavegacao, nomePasta.c_str());
 			
+			cout<<nomePastaNavegacao<<endl;
+		
 			char cstr[novoNome.size() + 1];
 			strcpy(cstr, novoNome.c_str());
 				
 			posicaoConteudo = verificaArquivo(cstr);
+			int validaPasta = verificaDispPasta();
+			listaPastasArquivos();
+			cout<<validaPasta<<endl;
+			
+			cout<<"Validacao"<<endl;
+			cout<<posicaoConteudo<<endl;
+			cout<<validaPasta<<endl;
 			if(posicaoConteudo == -1){
 				cout << "Arquivo não existe" <<endl;
-			}else{
+			}else if (validaPasta == -1 && posicaoConteudo != -1){
 				cout<<"Recupera conteudo"<<endl;
 				recuperaConteudo();
 				cout<<"Arquivo existe"<<endl;
 				copiaArquivo(novoNome2, conteudoLinha);
+				
 			}
 			
-			cout<<"Nome arquivos"<<endl;
-			cout << cstr << endl;
-			cout << novoNome2 << endl;
+			conteudoLinha.clear();
+
+			if(validaPasta == -1){
+				cout << "Pasta não existe" <<endl;
+				
+			}else if(validaPasta != -1 && posicaoConteudo != -1){
+				listaPastasArquivos();
+				recuperaConteudo();
+				copiaArquivo(novoNome2, conteudoLinha);
+			}
 			
-			cout<<"Verifica arquivo existe"<<endl;
-			cout << posicaoConteudo << endl;
+
+			
+
+			
+			
 			
 			
 			
